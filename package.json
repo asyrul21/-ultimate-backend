@@ -1,0 +1,11 @@
+{
+  "name": "ultimateportfolio-express",
+  "version": "1.0.0",
+  "description": "The backend to store content essential information in using MongoDB and Mongoose",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Asyrul Ahmad",
+  "license": "ISC"
+}
