@@ -57,15 +57,8 @@ router.post('/', function (req, res, next) {
     })
 });
 
-// req.query
-// req.param
-// req.body
-
-// update
-router.put('/:key/edit', function (req, res, next) {
-    // new content instance
-    var updatedContent = req.body
-
+// update like only
+router.put('/:key/like', function (req, res, next) {
     // create query
     var query = {
         key: req.params.key
@@ -73,41 +66,28 @@ router.put('/:key/edit', function (req, res, next) {
     // { key: 'transform'}
 
     console.log('Query:', query);
-    console.log('Updated:', updatedContent);
+    // console.log('Updated:', updatedContent);
 
-    // save content
-    Content.updateOne(query, updatedContent, function (err, content) {
+    // find the content
+    Content.findOne(query, function (err, content) {
         if (err || !query.key) {
-            res.send(err);
+            res.send('Error:', err)
         } else {
-            // return saved Content
-            res.json({
-                'Status': 'Success',
-                'contentUpdated': content
-            });
+            // update the like number of the content
+            Content.updateOne(query, { likes: content.likes += 1 }, function (err, updatedContent) {
+                // return saved Content
+                res.json({
+                    'Status': 'Success',
+                    'contentUpdated': updatedContent
+                });
+            })
         }
     })
 });
 
 // delete
 router.delete('/:key', function (req, res, next) {
-    // create query
-    var query = {
-        key: req.params.key
-    }
-
-    console.log('Query:', query);
-
-    Content.deleteOne(query, function (err, content) {
-        if (err || !query.key) {
-            res.send(err);
-        } else {
-            // return saved Content
-            res.json({
-                'Status': 'Success'
-            });
-        }
-    })
+    res.send('This route is prohibited')
 })
 
 
