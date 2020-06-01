@@ -22,8 +22,7 @@ var ContentSchema = new Schema({
         type: String
     },
     imagesFolderPath: {
-        type: String,
-        required: true
+        type: String
     },
     dataFilePath: {
         type: String
