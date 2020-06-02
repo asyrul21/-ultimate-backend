@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var path = require('path');
+var { restrict } = require('../Middlewares')
 
 // **********************************************
 // ************ mongoose connection *************
@@ -37,7 +38,7 @@ router.get('/', function (req, res, next) {
 });
 
 // insert content
-router.post('/', function (req, res, next) {
+router.post('/', restrict, function (req, res, next) {
     var content = req.body
 
     // new content instance
@@ -57,7 +58,7 @@ router.post('/', function (req, res, next) {
     })
 });
 
-// update like only
+// update like only - dont need to restrict
 router.put('/:key/like', function (req, res, next) {
     // create query
     var query = {
@@ -85,9 +86,49 @@ router.put('/:key/like', function (req, res, next) {
     })
 });
 
+// update whole content
+router.put('/:key/edit', restrict, function (req, res, next) {
+    // create query
+    var query = {
+        key: req.params.key
+    }
+    // { key: 'transform'}
+    var updatedContent = req.body
+
+    console.log('Query:', query);
+    // console.log('Updated:', updatedContent);
+
+    Content.update(query, updatedContent, function (err, updatedContent) {
+        if (err || !query.key) {
+            res.send('Error:', err)
+        }
+        // return saved Content
+        res.json({
+            'Status': 'Success',
+            'contentUpdated': updatedContent
+        });
+    })
+});
+
 // delete
-router.delete('/:key', function (req, res, next) {
-    res.send('This route is prohibited')
+router.delete('/:key', restrict, function (req, res, next) {
+    // create query
+    var query = {
+        key: req.params.key
+    }
+
+    console.log('Query:', query);
+
+    Content.deleteOne(query, function (err, content) {
+        if (err || !query.key) {
+            res.send(err);
+        } else {
+            // return saved Content
+            res.json({
+                'Status': 'Success'
+            });
+        }
+    })
 })
 
 
